@@ -10,7 +10,7 @@
 FILE *logfl;
 char *logStrings[5];
 char *logFormat = NULL;
-uint32_t logOptions = 0x0;
+uint64_t logOptions = 0x0;
 
 /*
 Log format options
