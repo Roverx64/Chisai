@@ -8,6 +8,8 @@ Using Chisai is fairly simple and the available functions are described below.
 Sets the format the logger should use
 ```c
 setLoggingFormat("%f:%l[%t][%n]: %m");
+//Prints out like
+//main:56[13:53:1][I]: Initilized log
 ```
 The options to use are specified below
 
