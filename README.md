@@ -40,7 +40,7 @@ setLogLevelStrings("General","Info","Warn","Error","Fatal");
 
 ---
 
-#### writeLog(int level, const char *func, int line, const char *str, ...)
+#### `writeLog(int level, const char *func, int line, const char *str, ...)`
 Writes to the log. The first three arguments are set automatically with `LOG_...`  
 Log types are specified below.  
 ```c
@@ -57,5 +57,5 @@ writeLog(LOG_INFO,"Initilized log %i\n",0);
 
 ---
 
-#### closeLog()
+#### `closeLog()`
 Closes the opened log file if one is open
