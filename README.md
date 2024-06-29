@@ -40,6 +40,20 @@ setLogLevelStrings("General","Info","Warn","Error","Fatal");
 
 ---
 
+#### `void setLogOptions(uint64_t opt)`
+Sets the logging options to use.  
+Available options defined below.  
+```c
+setLogOptions(LOG_OPT_NO_STDOUT);
+```
+OR these together.  
+|Name                |Description                |
+|--------------------|---------------------------|
+|LOG_OPT_FILE_OUT    |Internal use only          |
+|LOG_OPT_NO_STDOUT   |Disables printing to stdout|
+
+---
+
 #### `writeLog(int level, const char *func, int line, const char *str, ...)`
 Writes to the log. The first three arguments are set automatically with `LOG_...`  
 Log types are specified below.  

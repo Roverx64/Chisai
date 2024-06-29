@@ -8,9 +8,9 @@
 #include "chisai.h"
 
 FILE *logfl;
-bool logToFile = false;
 char *logStrings[5];
 char *logFormat = NULL;
+uint32_t logOptions = 0x0;
 
 /*
 Log format options
@@ -28,7 +28,7 @@ void setLoggingFormat(char *format){
 int enableFileLogging(const char *path, bool create){
     logfl = fopen(path,(create) ? "w+" : "w");
     if(logfl == NULL){return -1;}
-    logToFile = true;
+    logOptions |= LOG_OPT_FILE_OUT;
     return 0;
 
 }
@@ -41,6 +41,10 @@ void setLogLevelStrings(char *general, char *info, char *warn, char *error, char
     logStrings[4] = fatal;
 }
 
+void setLogOptions(uint64_t opt){
+    logOptions = opt;
+}
+
 void writeLog(int level, const char *func, int line, const char *str, ...){
     //Parse format
     //NOTE: It's probably possible to optimize this more
@@ -50,48 +54,48 @@ void writeLog(int level, const char *func, int line, const char *str, ...){
     struct tm *tinf;
     for(int i = 0; logFormat[i] != '\0'; ++i){
         if(logFormat[i] != '%'){
-            printf("%c",logFormat[i]);
-            if(logToFile){fprintf(logfl,"%c",logFormat[i]);}
+            if(!(logOptions&LOG_OPT_NO_STDOUT)){printf("%c",logFormat[i]);}
+            if(logOptions&LOG_OPT_FILE_OUT){fprintf(logfl,"%c",logFormat[i]);}
             continue;
         }
         ++i;
         switch(logFormat[i]){
             case '%':
-            printf("%%");
-            if(logToFile){fputs("%",logfl);}
+            if(!(logOptions&LOG_OPT_NO_STDOUT)){printf("%%");}
+            if(logOptions&LOG_OPT_FILE_OUT){fputs("%",logfl);}
             break;
             //Function name
             case 'f':
-            printf("%s",func);
-            if(logToFile){fprintf(logfl,"%s",func);}
+            if(!(logOptions&LOG_OPT_NO_STDOUT)){printf("%s",func);}
+            if(logOptions&LOG_OPT_FILE_OUT){fprintf(logfl,"%s",func);}
             break;
             //Log level
             case 'n':
             if((level > 4) || (level < 0)){level = 0;}
-            printf("%s",logStrings[level]);
-            if(logToFile){fprintf(logfl,"%s",logStrings[level]);}
+            if(!(logOptions&LOG_OPT_NO_STDOUT)){printf("%s",logStrings[level]);}
+            if(logOptions&LOG_OPT_FILE_OUT){fprintf(logfl,"%s",logStrings[level]);}
             break;
             //Line number
             case 'l':
-            printf("%i",line);
-            if(logToFile){fprintf(logfl,"%i",line);}
+            if(!(logOptions&LOG_OPT_NO_STDOUT)){printf("%i",line);}
+            if(logOptions&LOG_OPT_FILE_OUT){fprintf(logfl,"%i",line);}
             break;
             //POSIX time
             case 't':
             time(&tm);
             tinf = localtime(&tm);
-            printf("%i:%i:%i",tinf->tm_hour,tinf->tm_min,tinf->tm_sec);
-            if(logToFile){fprintf(logfl,"%i:%i:%i",tinf->tm_hour,tinf->tm_min,tinf->tm_sec);}
+            if(!(logOptions&LOG_OPT_NO_STDOUT)){printf("%i:%i:%i",tinf->tm_hour,tinf->tm_min,tinf->tm_sec);}
+            if(logOptions&LOG_OPT_FILE_OUT){fprintf(logfl,"%i:%i:%i",tinf->tm_hour,tinf->tm_min,tinf->tm_sec);}
             break;
             //Message
             case 'm':
-            vprintf(str,list);
-            if(logToFile){vfprintf(logfl,str,list);}
+            if(!(logOptions&LOG_OPT_NO_STDOUT)){vprintf(str,list);}
+            if(logOptions&LOG_OPT_FILE_OUT){vfprintf(logfl,str,list);}
             break;
         }
     }
 }
 
 void closeLog(){
-    if(logToFile){fclose(logfl);}
+    if(logOptions|LOG_OPT_FILE_OUT){fclose(logfl);}
 }
