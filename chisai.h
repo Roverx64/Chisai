@@ -1,6 +1,7 @@
 #pragma once
 
 #include <stdint.h>
+#include <stdbool.h>
 
 #define LOG_GENERAL 0,__FUNCTION__,__LINE__
 #define LOG_INFO 1,__FUNCTION__,__LINE__
