@@ -65,7 +65,7 @@ writeLog(LOG_INFO,"Initilized log %i\n",0);
 
 |Level         |Description                                         |
 |--------------|----------------------------------------------------|
-|LOG_GENEAL    |Used when the level is outside of the accepted range|
+|LOG_GENERAL   |Used when the level is outside of the accepted range|
 |LOG_INFO      |Log general info                                    |
 |LOG_WARN      |Log warnings                                        |
 |LOG_ERROR     |Log errors                                          |
