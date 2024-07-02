@@ -1,13 +1,17 @@
 ## About
-Chisai is a simple and basic logging tool primarily for use with my projects.  
+Chisai is a tiny and basic logging tool primarily for use with my projects.  
 Using Chisai is fairly simple and the available functions are described below.
+  
+---
+### NOTE: Chisai uses a GCC specific macro: `##__VA_ARGS__`
+#### I have not tested if other compilers recognize or use this macro the same way GCC does   
 
 ## Functions
 
-#### `setLoggingFormat(char *format)`
+#### `chiSetLoggingFormat(char *format)`
 Sets the format the logger should use
 ```c
-setLoggingFormat("%f:%l[%t][%n]: %m");
+chiSetLoggingFormat("%f:%l[%t][%n]: %m");
 //Prints out like
 //main:56[13:53:1][I]: Initilized log
 ```
@@ -23,55 +27,75 @@ The options to use are specified below
 
 ---
 
-#### `enableFileLogging(const char *path, bool create)`
+#### `chiEnableFileLogging(const char *path, bool create)`
 Attempts to open, or create, a file at the specified path.  
 Returns `-1` on failure.  
 ```c
-enableFileLogging("./myLog.log",true);
+chiEnableFileLogging("./myLog.log",true);
 ```
 
 ---
 
-#### `setLogLevelStrings(char *general, char *info, char *warn, char *error, char *fatal)`
+#### `chiSetLogStrings(char *general, char *info, char *warn, char *error, char *fatal, char *verbose)`
 Sets the strings to use when `%n` is used.  
 ```c
-setLogLevelStrings("G","I","W","E","F");
+chiSetLogStrings("G","I","W","E","F","V");
 //Or
-setLogLevelStrings("General","Info","Warn","Error","Fatal");
+chiSetLogStrings("General","Info","Warn","Error","Fatal","Verbose");
 ```
 
 ---
 
-#### `void setLogOptions(uint64_t opt)`
+#### `chiSetLoggingLevel(uint8_t level)`  
+Sets the minimum level to be printed.  
+```c
+chiSetLoggingLevel(CHI_FATAL);
+logFatal("This will be printed");
+logInfo("This won't be printed");
+```
+
+---
+
+#### `chiSetLogOptions(uint32_t opt)`
 Sets the logging options to use.  
 Available options defined below.  
 ```c
-setLogOptions(LOG_OPT_NO_STDOUT);
+chiSetLogOptions(CHI_OPT_NO_STDOUT);
 ```
 OR these together.  
 |Name                |Description                |
 |--------------------|---------------------------|
-|LOG_OPT_FILE_OUT    |Internal use only          |
-|LOG_OPT_NO_STDOUT   |Disables printing to stdout|
+|CHI_OPT_FILE_OUT    |Internal use only          |
+|CHI_OPT_NO_STDOUT   |Disables printing to stdout|
 
 ---
 
-#### `writeLog(int level, const char *func, int line, const char *str, ...)`
-Writes to the log. The first three arguments are set automatically with `LOG_...`  
-Log types are specified below.  
+#### `chiWriteLog_int(int level, const char *func, int line, const char *str, ...)`
+Used interally by the macros.  
+Writes to the log.
+Log levels are specified below.  
 ```c
-writeLog(LOG_INFO,"Initilized log %i\n",0);
+chiWriteLog_int(CHI_LEVEL_INFO,__FUNCTION__,__LINE__,"Initilized log %i\n",0);
+//
+//Macros that you should use instead
+//
+chiLogInfo();
+chiLogWarn();
+chiLogError();
+chiLogFatal();
+chiLogVerbose();
 ```
 
 |Level         |Description                                         |
 |--------------|----------------------------------------------------|
-|LOG_GENERAL   |Used when the level is outside of the accepted range|
-|LOG_INFO      |Log general info                                    |
-|LOG_WARN      |Log warnings                                        |
-|LOG_ERROR     |Log errors                                          |
-|LOG_FATAL     |Log fatal errors                                    |
+|CHI_GENERAL   |Used when the level is outside of the accepted range|
+|CHI_VERBOSE   |Log verbose info                                    |
+|CHI_INFO      |Log general info                                    |
+|CHI_WARN      |Log warnings                                        |
+|CHI_ERROR     |Log errors                                          |
+|CHI_FATAL     |Log fatal errors                                    |
 
 ---
 
-#### `closeLog()`
+#### `chiCloseLog()`
 Closes the opened log file if one is open
