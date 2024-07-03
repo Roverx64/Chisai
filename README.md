@@ -12,6 +12,7 @@ Using Chisai is fairly simple and the available functions are described below.
 Sets the format the logger should use
 ```c
 chiSetLoggingFormat("%f:%l[%t][%n]: %m");
+chiLofInfo("Initilized log\n");
 //Prints out like
 //main:56[13:53:1][I]: Initilized log
 ```
@@ -50,8 +51,8 @@ chiSetLogStrings("General","Info","Warn","Error","Fatal","Verbose");
 Sets the minimum level to be printed.  
 ```c
 chiSetLoggingLevel(CHI_FATAL);
-logFatal("This will be printed");
-logInfo("This won't be printed");
+chiLogFatal("This will be printed");
+chiLogInfo("This won't be printed");
 ```
 
 ---
