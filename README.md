@@ -12,7 +12,7 @@ Using Chisai is fairly simple and the available functions are described below.
 Sets the format the logger should use
 ```c
 chiSetLoggingFormat("%f:%l[%t][%n]: %m");
-chiLofInfo("Initilized log\n");
+chiLogInfo("Initilized log\n");
 //Prints out like
 //main:56[13:53:1][I]: Initilized log
 ```
